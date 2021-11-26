@@ -1,0 +1,52 @@
+code,label
+profession,Profession
+membership,Professional Membership
+experience,Years of working Experience
+training_maintenance,Training program for road maintenance
+department_conduct_mt,Department conduct maintenance training for its staff
+organizers,Organizing agency
+data_rm,Data for road maintenance
+storage,Where and how do you store the data
+challenges,challenges during data collection
+software,software used
+method ,methodology used
+network_level,The road network-level data
+vrc_survey,Visual road condition surveys on the trunk roads network
+activities_bf,The activities before the actual field data work begins
+uncommon_defects,Uncommon road defects
+awarding_criteria,Criteria used in awarding road maintenance projects
+finance,Source for finance
+duration_department,How long have you been in the maintenance department
+describe,Please select one to describe what you do:
+periodic_rm,Organization of periodic road maintenance
+activities_during,Activities applied during
+admin_challenge,Challenges affecting the administrative process
+agency_chalenges,Challenges confronted in road agency
+quality_level,Rate the quality levels of the maintenance project
+role_md,Key role of the Maintenance Department
+rm_organised,How has road maintenance in Ghana been organized
+responsibility_department,Key responsibility of your Department in terms of maintenance
+duties_maint_engineer,What are the duties of a road maintenance engineer
+grass_cutting,Grass cutting
+cleaning,Cleaning of Drainage Structures / Kerbs
+desilting,Desilting of Drainage Structure
+patching,Potholes patching / sectional/ Edge repairs
+grading,Grading
+erosion_control,Erosion control
+crack_repairs,Crack repairs
+minor_repairs,Minor Drainage repairs
+green_area_maintenance,Green area maintenance
+replacement,Replacement of slabs and metal grating
+others,Others not included in this list
+rmms,Choosing an RMMS format that will be consistent with the
+industry_capacity,contracting industry capacity available in the country
+identification,Identification and clear definition of appropriate performance specifications
+incentive_payment,Design of incentive payment mechanism
+govt_support,Support from Government
+external_funds,Dependency on external funding
+political_influence,Political influence and others
+lack_planning,Lack of Proper planning
+fear_of_lost,Fear of losing a job
+lost_of_control,Loss of control of the network
+attitude,Performance and attitude of contractors
+estimation_challenges,Challenges in estimating the cost

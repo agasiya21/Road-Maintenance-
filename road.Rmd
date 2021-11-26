@@ -1,0 +1,241 @@
+---
+title: "ROAD MAINTENANCE MANAGEMENT SYSTEM FOR URBAN AND FEEDER ROADS"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, comment = NA, message = FALSE, warning = FALSE, fig.width = 16, fig.height = 16)
+
+library(tidyverse)
+library(gtsummary)
+library(summarytools)
+library(ggplot2)
+library(flextable)
+library(ggstatsplot)
+library(gridExtra)
+library(scales)
+library(ggpubr)
+library(haven)
+library(readr)
+library(readxl)
+
+#rlb <- read.csv("C:\R Projects\Road Maintenance\roadlb.csv")
+rlb <- read_csv("roadlb.csv")
+rgh <- read_excel("roadgh.xlsx")
+roadbk <- read_csv("roadbk.csv")
+Hmisc::label(rlb, self = F) <- roadbk$label
+Hmisc::label(rgh, self = F) <- roadbk$label
+```
+
+# CHAPTER
+# RESULT
+## Membership By Profession
+Respondents are made up of civil engineers, materials engineers and quantity surveyors from Ghana and Liberia. The below shows that 108(65%) of the of them are Ghanaian while the remaining 59(35%) are from Liberia. There 113(68%) civil engineers of which 72 are Ghanaians and 41 being Liberians,  22(13%) material engineers of which 12 are Ghanaians and 10 from Liberia, and 32(19%) quantity surveyors consisting of 24 Ghanaians and 8 Liberians.  For Ghanaian respondents, 82(49%) of them are from the Ghana Institute of Engineers and 26(16%) from the Ghana Institute of Surveyors. On the side of the Liberian respondents, 50(30%) of them are from the Engineering Society of Liberia (ESOL), 8(4.8%) from the Liberia society women Engineers (LSWE) and 1 person (0.6%) from the Society women engineers of Liberia (SWEL)
+```{r}
+gh <- rgh %>% select(membership, profession) %>% filter(membership!="" &membership!="Other" & profession!="") %>% tbl_cross(row = "membership", col = "profession", margin = "row", percent = "cell") %>% bold_labels()
+lb <- rlb %>% select(membership, profession) %>% filter(membership!="If other, please specify" & membership!="") %>% tbl_cross(row = "membership", col = "profession", margin = "row", percent = "cell")
+tbl_merge(tbls = list(lb, gh), tab_spanner = c("Liberia", "Ghana")) %>% as_flex_table()
+#tbl_stack(list(gh, lb), group_header = c("ghana", "liberia"))
+#tbl_merge(tbls = list(gh, lb)) %>% modify_spanning_header(everything()~NA_character_)
+```
+
+## Years of Work Experience
+Assessment was made on the years of work experience of the respondents. It is seen that the profession with highest working experience are the civil engineers for both countries, followed by the quantity surveyors and then materials engineers for Ghana and otherwise for Liberia. The diagram shows that 5(12%) and 12(16%) of civil engineers from Liberia and Ghana respectively had at least 16 years of work experience as compared to materials engineers and quantity surveyors who had relatively fewer years of experience respectively. Also 50(43%) of the civil engineers consisting of 18 from Liberia and 32 from Ghana has at most five years of work experience which far outnumbers the material engineers and the quantity surveyors for both countries.
+```{r fig.height=14}
+rlb %>% select(experience, profession) %>% filter(experience!="" & experience!="Other") %>% table()
+lb<-ggplot(rlb, aes(experience)) + geom_bar(aes(fill = profession))+ labs(title = "Years of work experience (Liberia)", x = "Years of work experience", y = "Profession") + ggthemes::theme_clean() + theme(legend.position = "bottom")
+rgh %>% select(experience, profession) %>% filter(experience!="" & experience!="Other") %>% table()
+gh<-ggplot(rgh, aes(experience )) + geom_bar(aes(fill = profession)) + labs(title = "Years of work experience (Ghana)", x = "Years of work experience", y = "Profession") +  ggthemes::theme_clean() + theme(legend.position = "bottom")
+#tbl_merge(tbls = list(adm, adm1), tab_spanner = c("Liberia", "Ghana")) %>% as_flex_table()
+ggarrange(lb, gh, ncol = 2)
+```
+
+
+## Agencies That Organize maintenance training for the staff
+The study indicates that there were periodic road maintenance training sessions organized by different agencies for the respondents in their various departments for both countries. These training session are organized either once a year, every 6 months or twice within year. According to the respondents, the road maintenance training session were organized the Ghana High Way Authority, Department of Feeder Roads, Department of Urban Roads, Beureua of Highway maintenance, GIZ, and Infrastructure implementation unit.
+```{r}
+gh <- rgh %>% select(department_conduct_mt, organizers) %>% filter(organizers!="" & department_conduct_mt!="" & department_conduct_mt!="other") %>% tbl_cross(row = organizers, col = department_conduct_mt, margin = "column", percent = "cell") %>% bold_labels()
+lb <- rlb %>% select(department_conduct_mt, organizers) %>% filter(organizers!="" & department_conduct_mt!="" & department_conduct_mt!="other") %>% tbl_cross(row = organizers, col = department_conduct_mt, margin = "column", percent = "cell")
+tbl_merge(tbls = list(lb, gh), tab_spanner = c("Liberia", "Ghana")) %>% as_flex_table()
+```
+
+
+## Key role of the Maintenance Department
+Major of the respondent, i.e. 96 (57%) indicated that the key role of the maintenance department is the maintenance of all National, Inter-Regional, and Regional roads in the network: 35 from Liberia, 61 from Ghana. Thirty-two(32), representing 19% of them also stated that the maintenance department’s key role is to ensure expeditious collection of revenues from source: this also consist of 16 Liberians and 16 Ghanaian. 23 (14%) made up of 5 Liberians and 18 Ghanaians opined that ensuring the adequacy of revenues for maintenance needs is the key role of the maintenance department, and the last but not the least group were of the view that the road maintenance departments key role is the efficient delivery of road infrastructure services.
+```{r}
+gh <- rgh %>% select(role_md) %>% filter(role_md!="") %>% tbl_summary() %>% bold_labels()
+lb <- rlb %>% select(role_md) %>% filter(role_md!="") %>% tbl_summary()
+tbl_merge(tbls = list(lb, gh), tab_spanner = c("Liberia", "Ghana")) %>% as_flex_table()
+```
+
+## Uncommon Road Defects
+There are some road defects which are not commonly observed on the road. According the responses, bleeding, distresses, raveling, Longitudinal cracks and traverse cracks are some uncommon road defects. These are from 21 (13%), 6 (3.7%), 10 (6.2%), 10 (6.2%) and 8 (4.9%) collective respondents respectively. Other responses were a combination of two or more defects. For instance 45 (28%) of them consisting of 25 Liberian and 20 Ghanaian stated Raveling and Bleeding as common, 25 (15%) stated Longitudinal cracks, Traverse cracks, Raveling and Bleeding as uncommon, 22 (14%) stated Traverse cracks, Raveling and Bleeding as uncommon and so on.
+```{r}
+lb <- rlb %>% select(uncommon_defects) %>% filter(uncommon_defects!="") %>% tbl_summary()%>% bold_labels()
+gh <- rgh %>% select(uncommon_defects) %>% filter(uncommon_defects!="") %>% tbl_summary() 
+tbl_merge(tbls = list(lb, gh), tab_spanner = c("Liberia", "Ghana")) %>% as_flex_table()
+```
+
+ 
+## The activities before the actual field data work begins
+Before any field data work begins, the respondents stated that certain activities are performed. These activities include but not limited to Selecting and training teams for collecting the data, Planning to allocate the requisite logistics for the exercise, Planning the entire calendar for data collection. Majority of the respondents 48 (29%) indicated that a combination of all these activities is performed before the actual field data work takes place. For instance, 17(31%) of respondents from Liberia stated Selecting and training teams for collecting the data.;Planning to allocate the requisite logistics for the exercise as those activities. 
+```{r}
+gh <- rgh %>% select(activities_bf) %>% filter(activities_bf!="") %>% tbl_summary() %>% bold_labels()
+lb <- rlb %>% select(activities_bf) %>% filter(activities_bf!="") %>% tbl_summary()
+tbl_merge(tbls = list(lb, gh), tab_spanner = c("Liberia", "Ghana")) %>% as_flex_table()
+```
+
+## How periodic road maintenance is organized
+Periodically, road maintenance is organized in order to ensure longivity. The following are how the maintenance is done according the response of the study. 70 (42%), made up of 31 Liberians and 39 Ghanaians respondents stated that it is done by monitoring and checking the efficiency of road networks. 64 (38%) consisting of 16 Liberians and 48 Ghanaians also stated that it is done by ensuring that a well-defined system of rules, standard operating procedures, and norms are in line with quality road networks, while the remaining 33 (20%) of them mentioned that road maintenance is organized by going by specific requirements of the Road Agency(i.e., 11 from Liberia, 22 from Ghana).
+```{r}
+gh <- rgh %>% select(periodic_rm) %>% filter(periodic_rm!="") %>% tbl_summary() %>% bold_labels()
+lb <- rlb %>% select(periodic_rm) %>% filter(periodic_rm!="" & periodic_rm!="other") %>% tbl_summary()
+tbl_merge(tbls = list(lb, gh), tab_spanner = c("Liberia", "Ghana")) %>% as_flex_table()
+```
+
+## Administrative challenges
+In the administrative process of road maintenance management, the respondents indicated that some challenges are encountered. 80(47%) out of the 170 respondents stated that the major challenge is that Projects are under cost or over cost. Another challenge stated by 64 respondents was the lack time and Cost limits stated. Fifteen(15) others also made mention of that fact that if there is no specific project period stated, the process seem quite challenging. From the challenges listed, there are 30, 23 and 6 response each from Liberia, respectively. 
+```{r fig.height=14}
+#gh <- rgh %>% select(admin_challenge) %>% filter(admin_challenge!="" & admin_challenge!="Other") %>% tbl_summary() %>% #bold_labels()
+#lb <- rlb %>% select(admin_challenge) %>% filter(admin_challenge!="" & admin_challenge!="Other") %>% tbl_summary()
+#tbl_merge(tbls = list(gh, lb), tab_spanner = c("Ghana", "Liberia")) %>% as_flex_table()
+
+adm<-rlb %>% select(admin_challenge) %>% filter(admin_challenge!="" & admin_challenge!="Other") 
+l1<-ggplot(aes(admin_challenge), data = adm)+geom_bar(fill = "red", color = "green")+labs(title = "Administrative challenges in Liberia", x = "Administrative challenges", y = "Count") + scale_fill_manual(values = "red") +
+  ggthemes::theme_clean()
+
+adm<-rgh %>% select(admin_challenge) %>% filter(admin_challenge!="" & admin_challenge!="Other")
+g1<-ggplot(aes(admin_challenge), data = adm)+geom_bar(fill = "green", color = "red")+labs(title = "Administrative challenges in Ghana", x = "Administrative challenges", y = "Count") + scale_fill_manual(values = "red") +
+  ggthemes::theme_clean()
+ggarrange(l1, g1, ncol = 2)
+```
+
+## Awarding Criteria
+Certain criteria are looked out for in awarding road maintenance projects. The study reveals that least biller pricing is the major criteria, according to 75 (46%) of the respondents of which 53% are from the Liberian respondents and 42% from Ghana. 45 (27%) also opined that Company experience in similar work is greatly considered when awarding road maintenance projects, while 13 (7.9%) were of the view that Designated contractors are looked out for. 
+```{r}
+gh <- rgh %>% select(awarding_criteria) %>% filter(awarding_criteria!="") %>% tbl_summary() %>% bold_labels()
+lb <- rlb %>% select(awarding_criteria) %>% filter(awarding_criteria!="") %>% tbl_summary()
+tbl_merge(tbls = list(lb, gh), tab_spanner = c("Liberia", "Ghana")) %>% as_flex_table()
+```
+
+## Finance
+The process of road maintenance management is funded by diverse source. In this study, most of the respondents indicated that their source of funding or their source of finance was from government allotment (96 (57%) respondents stated so). 8 (4.8%) of them also stated World Bank Aid as their major source of finance. 3 (1.8%) of them pointed their source of fund to Bank loans whiles the rest of the respondents mentioned multiple sources as their source.
+```{r}
+gh <- rgh %>% select(finance) %>% filter(finance!="") %>% tbl_summary() %>% bold_labels()
+lb <- rlb %>% select(finance) %>% filter(finance!="") %>% tbl_summary()
+tbl_merge(tbls = list(lb, gh), tab_spanner = c("Liberia", "Ghana")) %>% as_flex_table()
+```
+
+## Maintenance Work on Road Defects
+The study inquired of how often certain road maintenance work is conducted on named road defects. The graph below show that major of the respondents indicated that most of the road maintenance works are done once in year (indicated in orange for both Liberia and Ghana). The second highest group mentioned that these maintenance works are done after every six month, among others. Some of the named maintenance work include grass cutting, grading, erosion control, crack repairs, pothole patching etc. The graph gives details on this subject. The colors represent the frequency of road maintenance. For instance, 39% of the Liberian respondents mentioned replacement of slabs and metal grating as an activity that takes place one time every year corresponding to 49% for their Ghanaian colleagues. 
+```{r }
+rlb <- read_csv("roadlb.csv")
+rgh <- read_excel("roadgh.xlsx")
+
+#rlb %>% pivot_longer(40:51, names_to = "Road", values_to = "Frequency") 
+l1 <- rlb %>% pivot_longer(29:38, names_to = "Maintenance", values_to = "Frequency") %>% 
+#rlb %>% pivot_longer(40:51, names_to = "Road", values_to = "Frequency") 
+  mutate(
+    Maintenance = fct_recode(Maintenance, 
+                      "Grass cutting" = "grass_cutting",
+                      "Cleaning of Drainage Structures / Kerbs" = "cleaning",
+                      "Desilting of Drainage Structure" = "desilting",
+                      "Potholes patching / sectional/ Edge repairs" = "patching" ,
+                      "Grading" = "grading",
+                      "Erosion control" =  "erosion_control",
+                      "Crack repairs"  = "crack_repairs",
+                      "Minor Drainage repairs"  = "minor_repairs",
+                      "Green area maintenance"  = "green_area_maintenance",
+                      "Replacement of slabs and metal grating"  = "replacement")) %>%
+   ggbarstats(x = Frequency, y = Maintenance, ylab = "Frequency of maintenance", title = "Maintenance Work on Road Defect", bf.message = F, proportion.test = F, results.subtitle = FALSE) + 
+  #scale_fill_lancet() +
+  theme(
+    legend.position = "bottom"
+  ) +
+  coord_flip()
+
+g1 <- rgh %>% pivot_longer(29:38, names_to = "Maintenance", values_to = "Frequency") %>% 
+#rlb %>% pivot_longer(40:51, names_to = "Road", values_to = "Frequency") 
+  mutate(
+    Maintenance = fct_recode(Maintenance, 
+                      "Grass cutting" = "grass_cutting",
+                      "Cleaning of Drainage Structures / Kerbs" = "cleaning",
+                      "Desilting of Drainage Structure" = "desilting",
+                      "Potholes patching / sectional/ Edge repairs" = "patching" ,
+                      "Grading" = "grading",
+                      "Erosion control" =  "erosion_control",
+                      "Crack repairs"  = "crack_repairs",
+                      "Minor Drainage repairs"  = "minor_repairs",
+                      "Green area maintenance"  = "green_area_maintenance",
+                      "Replacement of slabs and metal grating"  = "replacement")) %>%
+   ggbarstats(x = Frequency, y = Maintenance, ylab = "Frequency of maintenance", title = "Maintenance Work on Road Defect", bf.message = F, proportion.test = F, results.subtitle = FALSE) + 
+  #scale_fill_lancet() +
+  theme(
+    legend.position = "bottom"
+  ) +
+  coord_flip()
+
+``` 
+
+```{r}
+ggarrange(l1, g1, labels = c("Liberia", "Ghana"),  nrow = 2)
+```
+
+## Facilitators of successful implementation of road maintenance procurement contracts
+For a successful implementation of road maintenance procurement contracts in an agency, a number of issues affect it. The respondents were asked to rate how an outlined factors or issues affect(s) the subject at hand on the following scale; 1. Not at All 2. Very Low 3. Low 4. Medium 5. High. The degree of influence are represented with colors in the graph below while the vertical axis shows the factors. Not at all indicates that the factor has no influence on the successful Implementation of Road Maintenance Procurement Contracts. 
+```{r }
+rlb <- read_csv("roadlb.csv")
+rgh <- read_excel("roadgh.xlsx")
+g1 <- rgh %>% pivot_longer(40:51, names_to = "Factors", values_to = "Frequency") %>% 
+#rlb %>% pivot_longer(40:51, names_to = "Road", values_to = "Frequency") 
+  mutate(
+    Factors = fct_recode(Factors, 
+                      "Choosing an RMMS format" = "rmms",
+                      "Cleaning of Drainage Structures / Kerbs" = "industry_capacity",
+                      "Desilting of Drainage Structure" = "identification",
+                      "Potholes patching / sectional/ Edge repairs" = "incentive_payment" ,
+                      "Support from Government" = "govt_support",
+                      "Dependency on external funding" =  "external_funds",
+                      "Political influence and others"  = "political_influence",
+                      "Lack of Proper planning"  = "lack_planning",
+                      "Fear of losing a job"  = "fear_of_lost",
+                      "Loss of control of the network"  = "lost_of_control",
+                    "Performance and attitude of contractors" = "attitude",
+                   "Challenges in estimating the cost"  = "estimation_challenges" )) %>%
+   ggbarstats(x = Frequency, y = Factors, ylab = "Degree of influence", title = "Facilitators of successful implementation of road maintenance procurement contracts", bf.message = F, proportion.test = F, results.subtitle = FALSE) + 
+  #scale_fill_lancet() +
+  theme(
+    legend.position = "bottom"
+  ) +
+  coord_flip()
+
+  l1 <- rlb %>% pivot_longer(40:51, names_to = "Factors", values_to = "Frequency") %>% 
+#rlb %>% pivot_longer(40:51, names_to = "Road", values_to = "Frequency") 
+  mutate(
+    Factors = fct_recode(Factors, 
+                      "Choosing an RMMS format" = "rmms",
+                      "Cleaning of Drainage Structures / Kerbs" = "industry_capacity",
+                      "Desilting of Drainage Structure" = "identification",
+                      "Potholes patching / sectional/ Edge repairs" = "incentive_payment" ,
+                      "Support from Government" = "govt_support",
+                      "Dependency on external funding" =  "external_funds",
+                      "Political influence and others"  = "political_influence",
+                      "Lack of Proper planning"  = "lack_planning",
+                      "Fear of losing a job"  = "fear_of_lost",
+                      "Loss of control of the network"  = "lost_of_control",
+                    "Performance and attitude of contractors" = "attitude",
+                   "Challenges in estimating the cost"  = "estimation_challenges" )) %>%
+   ggbarstats(x = Frequency, y = Factors, ylab = "Degree of influence", title = "Facilitators of successful implementation of road maintenance procurement contracts", bf.message = F, proportion.test = F, results.subtitle = FALSE) + 
+  #scale_fill_lancet() +
+  theme(
+    legend.position = "bottom"
+  ) +
+  coord_flip()
+``` 
+
+```{r}
+ggarrange(l1, g1, labels = c("Liberia", "Ghana"),  nrow = 2)
+```
